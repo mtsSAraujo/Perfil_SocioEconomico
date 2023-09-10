@@ -6,7 +6,9 @@ dataFrame = pd.read_excel('perfil.xlsx')
 def tratamentoDeDados():
     trataMesNascimento()
     trataJornal()
+    trataPlanoDeSaude()
     dataFrame.drop(['Mês de nascimento', 'Mês de nascimento2'], axis = 1, inplace=True)
+    dataFrame.drop(['Você tem plano de saúde privado?2'], axis = 1, inplace=True)
     dataFrame.drop(['TV2', 'Internet2', 'Revistas2', 'Rádio3', 'Feed das Redes Sociais (Instagram, Youtube, TikTok, Twitter).2', 'Conversas informais com amigos2'], axis = 1, inplace=True)
     dataFrame.to_excel('perfilNovo.xlsx', index = False)
 
@@ -73,4 +75,13 @@ def trataJornal():
     for i in conversasInformais:
         j = conversasInformais.index[k]
         dataFrame.iat[j, 81] = i
+        k = k + 1
+
+def trataPlanoDeSaude():
+    coluna = dataFrame[dataFrame['Você tem plano de saúde privado?2'].notnull()]
+    planoDeSaude = coluna['Você tem plano de saúde privado?2']
+    k = 0
+    for i in planoDeSaude:
+        j = planoDeSaude.index[k]
+        dataFrame.iat[j, 46] = i
         k = k + 1
