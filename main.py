@@ -1,0 +1,3 @@
+from dataFrame import *
+
+tratamentoDeDados()
