@@ -17,7 +17,6 @@ def trataMesNascimento():
     coluna = dataFrame[dataFrame['Mês de nascimento'].notnull()]
     mesNascimento = coluna['Mês de nascimento']
     k = 0
-    print("fazendo metodo 1")
     for i in mesNascimento:
         j = mesNascimento.index[k]
         dataFrame.iat[j, 16] = i
@@ -26,7 +25,6 @@ def trataMesNascimento():
     coluna = dataFrame[dataFrame['Mês de nascimento2'].notnull()]
     mesNascimento = coluna['Mês de nascimento2']
     k = 0
-    print("fazendo metodo 2")
     for i in mesNascimento:
         j = mesNascimento.index[k]
         dataFrame.iat[j, 16] = i
