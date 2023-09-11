@@ -21,7 +21,8 @@ wordFreqEmprego = Counter(wordsEmprego)
 #print(wordFreqEmprego)
 
 matcher = Matcher(nlp.vocab) 
-pattern = [{'POS':('NOUN' and 'ADJ')}, {'POS':'NOUN' or 'ADJ'}] 
+pattern = [{'POS':('ADJ')}, {'POS':'NOUN'}] 
+pattern2 = [{'POS':'NOUN' or 'ADJ'}, {'POS':'PROPN'}]
 matcher.add('ADJ_PHRASE', [pattern]) 
 matches = matcher(docSonho, as_spans=True) 
 phrases = [] 
