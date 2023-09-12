@@ -1,5 +1,7 @@
 import pandas as pd
-import numpy as np
+import unicodedata
+from difflib import SequenceMatcher
+
 
 dataFrame = pd.read_excel('perfil.xlsx')
 
@@ -7,10 +9,48 @@ def tratamentoDeDados():
     trataMesNascimento()
     trataJornal()
     trataPlanoDeSaude()
+    criaColunaEmprego(dataFrame)
     dataFrame.drop(['Mês de nascimento', 'Mês de nascimento2'], axis = 1, inplace=True)
     dataFrame.drop(['Você tem plano de saúde privado?2'], axis = 1, inplace=True)
     dataFrame.drop(['TV2', 'Internet2', 'Revistas2', 'Rádio3', 'Feed das Redes Sociais (Instagram, Youtube, TikTok, Twitter).2', 'Conversas informais com amigos2'], axis = 1, inplace=True)
     dataFrame.to_excel('perfilNovo.xlsx', index = False)
+    dataFrameNovo = pd.read_excel('perfilNovo.xlsx')
+    checaSimilar(dataFrameNovo)
+
+
+def criaColunaEmprego(dataFrame):
+    emprego = dataFrame[dataFrame['Qual empresa que você está contratado agora?'].notnull()]
+    colunaEmprego = emprego['Qual empresa que você está contratado agora?']
+    k = 0
+    chars = '.,!?-/\|:;^~`[]*&¨%$#@()'
+    for i in (colunaEmprego):
+        j = colunaEmprego.index[k]
+        i = i.lower()
+        processamento = unicodedata.normalize("NFD", i)
+        processamento = processamento.encode("ascii", "ignore")
+        processamento = processamento.decode("utf-8")
+        processamento = processamento.translate(str.maketrans('', '', chars))
+        processamento = processamento.strip()
+        colunaEmprego[j] = processamento
+        k +=  1
+
+    dataFrame['Empregos Tratados'] = colunaEmprego
+    return dataFrame
+
+def checaSimilar(dataFrame):
+    emprego = dataFrame[dataFrame['Empregos Tratados'].notnull()]
+    colunaEmprego = emprego['Empregos Tratados']
+    #print(colunaEmprego)
+    thereshold = 0.80
+    empresasSimilares = []
+    for i, empresa1 in enumerate(colunaEmprego):
+        for j, empresa2 in enumerate(colunaEmprego):
+            if i < j and empresa1 != '' and empresa2 != '':
+                similaridade = SequenceMatcher(None, empresa1, empresa2).ratio()
+                if similaridade > thereshold:
+                    dataFrame['Empregos Tratados'] = dataFrame['Empregos Tratados'].str.replace(empresa1, empresa2)
+                    empresasSimilares.append((empresa1, empresa2, similaridade))
+                    print(f'indice i: {i} , valor: {empresa1}, \n indice j: {j}, valor: {empresa2}')
 
 def trataMesNascimento():
 
