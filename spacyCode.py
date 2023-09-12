@@ -52,67 +52,35 @@ def preprocess_text(text):
     return [] 
 
 def contagemEmprego(dataFrame):
-    emprego = dataFrame['Empregos Tratados']
-    df = pd.DataFrame(emprego)
-    df['Empregos Tratados'] = df['Empregos Tratados'].apply(lambda x: preprocess_text(x))
-    df = df.dropna(subset=['Empregos Tratados'])
-    company_counts = Counter()
 
-    for index, row in df.iterrows():
-        company_counts.update(row['Empregos Tratados'])
+    emprego_column = 'Empregos Tratados'
 
+    # Remova linhas com valores nulos na coluna de empregos
+    dataFrame_cleaned = dataFrame.dropna(subset=[emprego_column])
+
+    # Contagem de empregos inteiros
+    company_counts = Counter(dataFrame_cleaned[emprego_column])
+
+    # Contagem de linhas sem informações
+    desempregados = dataFrame[~dataFrame.index.isin(dataFrame_cleaned.index)].shape[0]
+
+    # Transformando o resultado em uma lista de tuplas (empresa, contagem)
     company_list = [(company, count) for company, count in company_counts.items()]
 
+    # Classificando as empresas por contagem em ordem decrescente
     company_list.sort(key=lambda x: x[1], reverse=True)
 
     for company, count in company_list:
         print(f"({company}, {count})")
 
-def checaSimilar(dataFrame):
-    emprego = dataFrame[dataFrame['Empregos Tratados'].notnull()]
-    thereshold = 0.80
-    empresasSimilares = []
-    k= 0 
-    for i, empresa1 in enumerate(emprego[:-1]):
-        j = emprego.index[k]
-        for empresa2 in emprego[j+1]:
-            if empresa1 != '' and empresa2 != '':
-                similaridade = SequenceMatcher(None, empresa1, empresa2).ratio()
-                if similaridade > thereshold:
-                    dataFrame['Empregos Tratados'] = dataFrame['Empregos Tratados'].str.replace(empresa1, empresa2)
-                    empresasSimilares.append(empresa1, empresa2, similaridade)
-        
-        k += 1
-
-
-
-def criaColunaEmprego(dataFrame):
-    emprego = dataFrame[dataFrame['Qual empresa que você está contratado agora?'].notnull()]
-    colunaEmprego = emprego['Qual empresa que você está contratado agora?']
-    k = 0
-    chars = '.,!?-/\|:;^~`[]*&¨%$#@()'
-    for i in (colunaEmprego):
-        j = colunaEmprego.index[k]
-        i = i.lower()
-        processamento = unicodedata.normalize("NFD", i)
-        processamento = processamento.encode("ascii", "ignore")
-        processamento = processamento.decode("utf-8")
-        processamento = processamento.translate(str.maketrans('', '', chars))
-        processamento = processamento.strip()
-        colunaEmprego[j] = processamento
-        k +=  1
-
-    dataFrame['Empregos Tratados'] = colunaEmprego
-    print(colunaEmprego)
+    print(f"Desempregados: {desempregados}")
 
 nlp = spacy.load('pt_core_news_sm')
 nlp.max_length = 1850000
-dataFrame = pd.read_excel('perfilNovo.xlsx')
+dataFrameTratado = pd.read_excel('perfilNovo.xlsx')
 
 nltk.download('punkt')
-criaColunaEmprego(dataFrame)
-checaSimilar(dataFrame)
-contagemEmprego(dataFrame)
-#getSonho(dataFrame)
-#getEmprego(dataFrame)
+contagemEmprego(dataFrameTratado)
+#getSonho(dataFrameTratado)
+#getEmprego(dataFrameTratado)
 #pattern2 = [{'POS':'NOUN' or 'ADJ'}, {'POS':'PROPN'}]
