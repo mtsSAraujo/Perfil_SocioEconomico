@@ -4,7 +4,7 @@ from difflib import SequenceMatcher
 from spacyCode import getSonho
 
 
-dataFrame = pd.read_excel('perfil.xlsx')
+dataFrame = pd.read_excel(r'C:\Users\madob\OneDrive\Área de Trabalho\BKPMateus\Programação\Roland\Perfil_SocioEconomico\perfil.xlsx')
 
 def tratamentoDeDados():
     trataMesNascimento()
@@ -16,7 +16,7 @@ def tratamentoDeDados():
     dataFrame.drop(['TV2', 'Internet2', 'Revistas2', 'Rádio3', 'Feed das Redes Sociais (Instagram, Youtube, TikTok, Twitter).2', 'Conversas informais com amigos2'], axis = 1, inplace=True)
     dataFrame.drop(['Hora de início', 'Hora de conclusão', 'ID', 'Email', 'Hora da última modificação'], axis = 1, inplace=True)
     dataFrame.to_excel('perfilNovo.xlsx', index = False)
-    dataFrameNovo = pd.read_excel('perfilNovo.xlsx')
+    dataFrameNovo = pd.read_excel(r"C:\Users\madob\OneDrive\Área de Trabalho\BKPMateus\Programação\Roland\Perfil_SocioEconomico\perfilNovo.xlsx")
     checaSimilar(dataFrameNovo)
     getSonho(dataFrameNovo)
     dataFrameNovo.to_excel('perfilNovo.xlsx')

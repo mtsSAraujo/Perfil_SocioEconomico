@@ -9,6 +9,8 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words('portuguese'))
+nlp = spacy.load(r'C:\Users\madob\AppData\Local\Programs\Python\Python311\Lib\site-packages\pt_core_news_sm\pt_core_news_sm-3.6.0')
+nlp.max_length = 1850000
 
 def getSonho(dataFrame):
     sonho = dataFrame['Escreva algumas linhas sobre sua história e seus sonhos de vida.']
@@ -101,9 +103,8 @@ def contagemEmprego(dataFrame):
 
     print(f"Desempregados: {desempregados}")
 
-nlp = spacy.load('pt_core_news_sm')
-nlp.max_length = 1850000
-#dataFrameTratado = pd.read_excel('perfilNovo.xlsx')
+#nlp = spacy.load('pt_core_news_sm')
+#nlp.max_length = 1850000
 
 nltk.download('punkt')
 #contagemEmprego(dataFrameTratado)
