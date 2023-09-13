@@ -16,16 +16,42 @@ def getSonho(dataFrame):
     docSonho = nlp(textoSonho, disable = ['ner'])
     wordsSonho = [token.lemma_ for token in docSonho if not token.is_punct and not token.is_stop and not token.is_space]
     freqSonho = Counter(wordsSonho)
-    print(freqSonho)
-    matcher = Matcher(nlp.vocab) 
-    pattern = [{'POS':('ADJ')}, {'POS':'NOUN'}]
-    matcher.add('ADJ_PHRASE', [pattern]) 
+    #print(freqSonho)
+    matcher = Matcher(nlp.vocab)
+    pattern2 = [{'LOWER': {'IN' : ['aprender', 'desenvolver','trabalhar', 'viajar', 'gastar', 'obter', 'ganhar', 'adquirir', 'conhecer', 'mudar', 'ser', 'conseguir', 'conquistar', 'receber']}}, {'IS_ALPHA':True, 'OP':'?'},
+    {'IS_ALPHA':True, 'OP':'?'}, {'POS':'NOUN'}]
+    matcher.add('ADJ_PHRASE', [pattern2]) 
     matches = matcher(docSonho, as_spans=True) 
     phrases = [] 
+    listaElementos= []
     for span in matches:
         phrases.append(span.text.lower())
-        phrase_freq = Counter(phrases)
+        phrase_freq = Counter(phrases)     
     print(phrase_freq)
+    series = pd.Series(phrases)
+    dataFrame['Sonhos mais recorrentes'] = series
+    dataFrame = checaSimilaridade(dataFrame)
+    return(dataFrame)
+
+def checaSimilaridade(dataFrame):
+    sonho = dataFrame[dataFrame['Sonhos mais recorrentes'].notnull()]
+    colunaSonho = sonho['Sonhos mais recorrentes']
+    #print(colunaEmprego)
+    thereshold = 0.80
+    empresasSimilares = []
+    for i, sonho1 in enumerate(colunaSonho):
+        for j, sonho2 in enumerate(colunaSonho):
+            if i < j and sonho1 != '' and sonho2 != '':
+                similaridade = SequenceMatcher(None, sonho1, sonho2).ratio()
+                if similaridade > thereshold:
+                    dataFrame['Sonhos mais recorrentes'] = dataFrame['Sonhos mais recorrentes'].str.replace(sonho2, sonho1)
+                    empresasSimilares.append((sonho1, sonho2, similaridade))
+                    print(f'indice i: {i} , valor: {sonho1}, \n indice j: {j}, valor: {sonho2} \n Similaridade: {similaridade}')
+
+    return(dataFrame)
+
+def criaColunaSonhos():
+    a = 0
 
 '''def getEmprego(dataFrame):
     emprego = dataFrame['Empregos Tratados']
@@ -77,10 +103,9 @@ def contagemEmprego(dataFrame):
 
 nlp = spacy.load('pt_core_news_sm')
 nlp.max_length = 1850000
-dataFrameTratado = pd.read_excel('perfilNovo.xlsx')
+#dataFrameTratado = pd.read_excel('perfilNovo.xlsx')
 
 nltk.download('punkt')
-contagemEmprego(dataFrameTratado)
+#contagemEmprego(dataFrameTratado)
 #getSonho(dataFrameTratado)
 #getEmprego(dataFrameTratado)
-#pattern2 = [{'POS':'NOUN' or 'ADJ'}, {'POS':'PROPN'}]

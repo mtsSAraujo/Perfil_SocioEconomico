@@ -1,6 +1,7 @@
 import pandas as pd
 import unicodedata
 from difflib import SequenceMatcher
+from spacyCode import getSonho
 
 
 dataFrame = pd.read_excel('perfil.xlsx')
@@ -17,6 +18,8 @@ def tratamentoDeDados():
     dataFrame.to_excel('perfilNovo.xlsx', index = False)
     dataFrameNovo = pd.read_excel('perfilNovo.xlsx')
     checaSimilar(dataFrameNovo)
+    getSonho(dataFrameNovo)
+    dataFrameNovo.to_excel('perfilNovo.xlsx')
 
 
 def criaColunaEmprego(dataFrame):
