@@ -13,6 +13,7 @@ def tratamentoDeDados():
     dataFrame.drop(['Mês de nascimento', 'Mês de nascimento2'], axis = 1, inplace=True)
     dataFrame.drop(['Você tem plano de saúde privado?2'], axis = 1, inplace=True)
     dataFrame.drop(['TV2', 'Internet2', 'Revistas2', 'Rádio3', 'Feed das Redes Sociais (Instagram, Youtube, TikTok, Twitter).2', 'Conversas informais com amigos2'], axis = 1, inplace=True)
+    dataFrame.drop(['Hora de início', 'Hora de conclusão', 'ID', 'Email', 'Hora da última modificação'], axis = 1, inplace=True)
     dataFrame.to_excel('perfilNovo.xlsx', index = False)
     dataFrameNovo = pd.read_excel('perfilNovo.xlsx')
     checaSimilar(dataFrameNovo)
