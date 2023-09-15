@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words('portuguese'))
-nlp = spacy.load(r'C:\Users\madob\AppData\Local\Programs\Python\Python311\Lib\site-packages\pt_core_news_sm\pt_core_news_sm-3.6.0')
+nlp = spacy.load("pt_core_news_sm")
 nlp.max_length = 1850000
 
 def getSonho(dataFrame):
