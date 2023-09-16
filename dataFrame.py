@@ -2,6 +2,7 @@ import pandas as pd
 import unicodedata
 from difflib import SequenceMatcher
 from spacyCode import getSonho
+from datetime import date
 
 
 dataFrame = pd.read_excel("perfil.xlsx")
@@ -11,6 +12,7 @@ def tratamentoDeDados():
     trataJornal()
     trataPlanoDeSaude()
     criaColunaEmprego(dataFrame)
+    criaColunaFaixaEtaria(dataFrame)
     dataFrame.drop(['Mês de nascimento', 'Mês de nascimento2'], axis = 1, inplace=True)
     dataFrame.drop(['Você tem plano de saúde privado?2'], axis = 1, inplace=True)
     dataFrame.drop(['TV2', 'Internet2', 'Revistas2', 'Rádio3', 'Feed das Redes Sociais (Instagram, Youtube, TikTok, Twitter).2', 'Conversas informais com amigos2'], axis = 1, inplace=True)
@@ -21,6 +23,30 @@ def tratamentoDeDados():
     getSonho(dataFrameNovo)
     dataFrameNovo.to_excel('perfilNovo.xlsx')
 
+def criaColunaFaixaEtaria(dataFrame):
+    nascimento = dataFrame[dataFrame['Ano de nascimento'].notnull()]
+    colunaNascimento = nascimento['Ano de nascimento']
+    k = 0
+    for i in colunaNascimento:
+        j = colunaNascimento.index[k]
+        idade = date.today().year - i
+        if idade>=15 and idade <20:
+            colunaNascimento[j] = "Entre 15 e 20"
+        elif idade>=20 and idade<25:
+            colunaNascimento[j] = "entre 20 e 25"
+        elif idade>=25 and idade<30:
+            colunaNascimento[j] = "entre 25 e 30"
+        elif idade>=30 and idade<35:
+            colunaNascimento[j] = "entre 30 e 35"
+        elif idade>=35 and idade<40:
+            colunaNascimento[j] = "entre 35 e 40"
+        elif idade>=40:
+            colunaNascimento[j] = "Acima de 40"     
+        k+=1
+
+    dataFrame['Faixa Etária'] = colunaNascimento
+    print(colunaNascimento)
+    return dataFrame
 
 def criaColunaEmprego(dataFrame):
     emprego = dataFrame[dataFrame['Qual empresa que você está contratado agora?'].notnull()]
