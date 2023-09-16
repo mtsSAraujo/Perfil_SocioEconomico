@@ -10,7 +10,7 @@ from nltk.corpus import stopwords
 import pt_core_news_sm
 
 stop_words = set(stopwords.words('portuguese'))
-nlp = spacy.load("pt_core_news_sm")
+nlp = pt_core_news_sm.load()
 nlp.max_length = 1850000
 
 def getSonho(dataFrame):
