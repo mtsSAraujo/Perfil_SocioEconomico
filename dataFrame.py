@@ -33,19 +33,18 @@ def criaColunaFaixaEtaria(dataFrame):
         if idade>=15 and idade <20:
             colunaNascimento[j] = "Entre 15 e 20"
         elif idade>=20 and idade<25:
-            colunaNascimento[j] = "entre 20 e 25"
+            colunaNascimento[j] = "Entre 20 e 25"
         elif idade>=25 and idade<30:
-            colunaNascimento[j] = "entre 25 e 30"
+            colunaNascimento[j] = "Entre 25 e 30"
         elif idade>=30 and idade<35:
-            colunaNascimento[j] = "entre 30 e 35"
+            colunaNascimento[j] = "Entre 30 e 35"
         elif idade>=35 and idade<40:
-            colunaNascimento[j] = "entre 35 e 40"
+            colunaNascimento[j] = "Entre 35 e 40"
         elif idade>=40:
             colunaNascimento[j] = "Acima de 40"     
         k+=1
 
     dataFrame['Faixa Etária'] = colunaNascimento
-    print(colunaNascimento)
     return dataFrame
 
 def criaColunaEmprego(dataFrame):
@@ -80,7 +79,7 @@ def checaSimilar(dataFrame):
                 if similaridade > thereshold:
                     dataFrame['Empregos Tratados'] = dataFrame['Empregos Tratados'].str.replace(empresa1, empresa2)
                     empresasSimilares.append((empresa1, empresa2, similaridade))
-                    print(f'indice i: {i} , valor: {empresa1}, \n indice j: {j}, valor: {empresa2}')
+                    #print(f'indice i: {i} , valor: {empresa1}, \n indice j: {j}, valor: {empresa2}')
 
 def trataMesNascimento():
 
